@@ -1,6 +1,6 @@
 import { client } from "@/client/httpClient";
 import { User } from "@/types/user";
-import moment from "moment";
+import moment from "moment-timezone";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -13,9 +13,11 @@ async function postTimeSlot(formData: FormData) {
   "use server";
 
   const { coachId, date, time } = Object.fromEntries(formData);
-  const startTime = new Date(
-    `${date}T${moment(time as string, ["h:mm A"]).format("HH:mm")}:00Z`
-  ).toISOString();
+  const localStartTime = `${date} ${moment(time as string, ["h:mm A"]).format(
+    "HH:mm"
+  )}:00`;
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const startTime = moment.tz(localStartTime, timezone).utc().toISOString();
 
   await client.post("timeslots", {
     coachId,
