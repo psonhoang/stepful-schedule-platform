@@ -102,13 +102,18 @@ export class TimeslotsService {
     id: number,
     updateTimeslotDto: UpdateTimeSlotDTO,
   ): Promise<TimeSlot> {
-    const { studentId } = updateTimeslotDto;
+    const { studentId, startTime } = updateTimeslotDto;
+    const endTime = startTime
+      ? DateTime.fromISO(startTime).plus({ hours: 2 }).toISO()
+      : undefined;
     return this.prismaService.timeSlot.update({
       where: {
         id,
       },
       data: {
         studentId,
+        startTime,
+        endTime,
       },
     });
   }

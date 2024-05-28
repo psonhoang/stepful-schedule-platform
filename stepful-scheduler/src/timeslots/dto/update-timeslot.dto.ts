@@ -1,8 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
+import { IsDateString, IsNumber, IsOptional } from 'class-validator';
 
 export class UpdateTimeSlotDTO {
-  @ApiProperty()
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsDateString()
+  startTime?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsNumber()
-  studentId: number;
+  studentId?: number;
 }
